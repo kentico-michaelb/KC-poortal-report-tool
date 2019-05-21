@@ -1,10 +1,13 @@
 import csv
 import os
 
-def get_api_counts(filename):
+# directory where Poortal reports need to be saved
+report_directory = "poortal_reports"
+
+def get_api_counts(filename, report_directory):
 
     # create a txt file to store the results
-    report_file = open('api_totals_for_{}.txt'.format(filename),'w')
+    report_file = open(report_directory+'/api_totals_for_{}.txt'.format(filename),'w')
     
     # ensure that there is a .csv extension
     extension_parse = filename.split(".")
@@ -13,7 +16,7 @@ def get_api_counts(filename):
         filename = filename + ".csv"
 
     # open the downloaded Poortal API report
-    with open("poortal_reports/" + filename, newline='') as csvfile:
+    with open(report_directory +"/" + filename, newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
         # skip the column headers
         next(spamreader, None)
@@ -34,12 +37,9 @@ def get_api_counts(filename):
             report_file.write("Project ID: {} | API Count Total: {} \n\n".format(values["ID"], values["api_call_total"]))
     report_file.close()            
 
-# parse reports
-#filename = input("What is the name of the API call report?")
-
 # execute the function for each report downloaded to the local reports directory
-for filename in os.listdir("poortal_reports"):
-    api_counts = get_api_counts(filename)
+for filename in os.listdir(report_directory):
+    api_counts = get_api_counts(filename, report_directory)
 
 
 
